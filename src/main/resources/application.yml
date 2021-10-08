@@ -1,0 +1,24 @@
+spring:
+  datasource:
+    c3p0:
+      driverClass: com.mysql.cj.jdbc.Driver
+      jdbcUrl: jdbc:mysql://localhost:3306/hdhr?characterEncoding=utf8&serverTimezone=Asia/Shanghai
+      user: root
+      password: w731630226
+      initialPoolSize: 5
+      minPoolSize: 5
+      maxPoolSize: 10
+      acquireIncrement: 5
+      acquireRetryAttempts: 30
+      acquireRetryDelay: 1000
+      maxIdleTime: 120
+      maxConnectionAge: 0
+      maxStatements: 100
+      maxStatementsPerConnection: 5
+      preferredTestQuery: SELECT SYSDATE FROM DUAL
+      idleConnectionTestPeriod: 120
+      numHelperThreads: 3
+mybatis:
+  mapper-locations: classpath*:/mapper/**Mapper.xml
+server:
+  port: 8888

@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.edu.cuit.hdhr.mapper.DeptMapper">
+
+  <select id="selectDeptForestByPID" parameterType="long" resultMap="deptForestResult">
+    select N_DEPT_ID, VC_DEPT_NAME, N_PARENT_ID from t_dept where N_PARENT_ID = #{parentID};
+  </select>
+
+  <select id="selectDeptByDeptID" parameterType="long" resultMap="deptResult">
+    select * from t_dept where N_DEPT_ID = #{deptID};
+  </select>
+
+  <insert id="insertDept">
+    insert into t_dept values(
+      null, #{deptCode}, #{deptName}, #{deptType}, #{parentID}, #{location},
+      #{postCode}, #{telephone}, #{fax}, #{mail}, #{isRemoved}, #{removeDate}
+    );
+  </insert>
+
+  <update id="updateDeptIgnoreNull">
+    update t_dept
+    <trim prefix="set" suffixOverrides=",">
+      <if test="deptCode != null">
+        VC_DEPT_CODE = #{deptCode},
+      </if>
+      <if test="deptName != null">
+        VC_DEPT_NAME = #{deptName},
+      </if>
+      <if test="deptType != null">
+        N_DEPT_TYPE = #{deptType},
+      </if>
+      <if test="parentID != null">
+        N_PARENT_ID = #{parentID},
+      </if>
+      <if test="location != null">
+        VC_LOCATION = #{location},
+      </if>
+      <if test="postCode != null">
+        VC_POST_CODE = #{postCode},
+      </if>
+      <if test="telephone != null">
+        VC_TELEPHONE = #{telephone},
+      </if>
+      <if test="fax != null">
+        VC_FAX = #{fax},
+      </if>
+      <if test="mail != null">
+        VC_MAIL = #{mail},
+      </if>
+      <if test="isRemoved != null">
+        N_IS_REMOVED = #{isRemoved},
+      </if>
+      <if test="removeDate != null">
+        D_REMOVE_DATE = #{removeDate},
+      </if>
+    </trim>
+    where N_DEPT_ID = #{deptID};
+  </update>
+
+  <update id="updateDept">
+    update t_dept set
+      VC_DEPT_CODE = #{deptCode},
+      VC_DEPT_NAME = #{deptName},
+      N_DEPT_TYPE = #{deptType},
+      N_PARENT_ID = #{parentID},
+      VC_LOCATION = #{location},
+      VC_POST_CODE = #{postCode},
+      VC_TELEPHONE = #{telephone},
+      VC_FAX = #{fax},
+      VC_MAIL = #{mail},
+      N_IS_REMOVED = #{isRemoved},
+      D_REMOVE_DATE = #{removeDate}
+    where N_DEPT_ID = #{deptID};
+  </update>
+
+  <delete id="deleteDept">
+    delete from t_dept where N_DEPT_ID = #{deptID} or N_PARENT_ID = #{deptID};
+  </delete>
+
+  <resultMap id="deptForestResult" type="cn.edu.cuit.hdhr.entity.DeptTree">
+    <id column="N_DEPT_ID" property="deptID"/>
+    <result column="VC_DEPT_NAME" property="deptName"/>
+    <result column="N_PARENT_ID" property="parentID"/>
+    <collection property="subDepts" javaType="java.util.ArrayList" ofType="cn.edu.cuit.hdhr.entity.DeptTree"
+                column="N_DEPT_ID" select="selectDeptForestByPID"/>
+  </resultMap>
+
+  <resultMap id="deptResult" type="cn.edu.cuit.hdhr.entity.Dept">
+    <id property="deptID" column="N_DEPT_ID"/>
+    <result property="deptName" column="VC_DEPT_NAME"/>
+    <result property="deptCode" column="VC_DEPT_CODE"/>
+    <result property="deptType" column="N_DEPT_TYPE"/>
+    <result property="parentID" column="N_PARENT_ID"/>
+    <result property="location" column="VC_LOCATION"/>
+    <result property="postCode" column="VC_POST_CODE"/>
+    <result property="telephone" column="VC_TELEPHONE"/>
+    <result property="fax" column="VC_FAX"/>
+    <result property="mail" column="VC_MAIL"/>
+    <result property="isRemoved" column="N_IS_REMOVED"/>
+    <result property="removeDate" column="D_REMOVE_DATE"/>
+  </resultMap>
+</mapper>
